@@ -44,7 +44,7 @@
       <HintPath>..\..\..\..\..\..\Desktop\Q42.HueApi-master\src\Q42.HueApi.ColorConverters\bin\Debug\netstandard2.0\Q42.HueApi.ColorConverters.dll</HintPath>
     </Reference>
     <Reference Include="SimpleLed, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SimpleLed.1.0.5\lib\net472\SimpleLed.dll</HintPath>
+      <HintPath>packages\SimpleLed.1.0.8\lib\net472\SimpleLed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

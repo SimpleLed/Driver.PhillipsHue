@@ -27,16 +27,13 @@ namespace Driver.PhillipsHue
 {
     public class PhillipsHue : ISimpleLedWithConfig
     {
-        public static PhillipsHue Instance;
+        
         public PhillipsHueConfig config = new PhillipsHueConfig();
         private Timer timer;
         SimpleHueApi api = new SimpleHueApi();
         public PhillipsHue()
         {
-            Instance = this;
-
-            
-
+        
         }
 
 
@@ -47,6 +44,12 @@ namespace Driver.PhillipsHue
         private bool isConnecting = false;
         public async Task Setup()
         {
+            int fd = 0;
+            if (controlDevices != null)
+            {
+                fd = controlDevices.Count;
+            }
+
             if (!string.IsNullOrWhiteSpace(config.IPAddress))
             {
                 isConnecting = true;
@@ -67,58 +70,59 @@ namespace Driver.PhillipsHue
 
                 StreamingClient = new StreamingHueClient(config.IPAddress, config.UserName, config.Key);
                 allGroups = await StreamingClient.LocalHueClient.GetEntertainmentGroups();
-                controlDevices=new List<ControlDevice>();
+                controlDevices = new List<ControlDevice>();
                 Debug.WriteLine("Setting up devices");
-                    foreach (Group allGroup in allGroups)
-                    {
-                        Debug.WriteLine("Working on " + allGroup.Name);
+                foreach (Group allGroup in allGroups)
+                {
+                    Debug.WriteLine("Working on " + allGroup.Name);
 
                     var dev = (new PhillipsHueControlDevice
-                        {
-                            DeviceType = DeviceTypes.Bulb,
-                            Driver = this,
-                            LEDs = new ControlDevice.LedUnit[allGroup.Lights.Count],
-                            Name = allGroup.Name,
-                            StreamingGroup = new StreamingGroup(allGroup.Locations),
-                            AllGroupId = allGroup.Id
-                        });
+                    {
+                        DeviceType = DeviceTypes.Bulb,
+                        Driver = this,
+                        LEDs = new ControlDevice.LedUnit[allGroup.Lights.Count],
+                        Name = allGroup.Name,
+                        StreamingGroup = new StreamingGroup(allGroup.Locations),
+                        AllGroupId = allGroup.Id
+                    });
 
                     Debug.WriteLine("connecting...");
-                        //Connect to the streaming group
-                   //     await StreamingClient.Connect(allGroup.Id);
-
-                        CancellationToken derp = new CancellationToken();
-                    //Start auto updating this entertainment group
-
-                  //  Debug.WriteLine("setting up autoupdate");
-
-                  //  await StreamingClient.AutoUpdate(dev.StreamingGroup, derp, 30);
-
-                        for (int i = 0; i < dev.LEDs.Length; i++)
+                    
+                    CancellationToken derp = new CancellationToken();
+                    
+                    for (int i = 0; i < dev.LEDs.Length; i++)
+                    {
+                        dev.LEDs[i] = new ControlDevice.LedUnit
                         {
-                            dev.LEDs[i] = new ControlDevice.LedUnit
+                            LEDName = "Bulb " + allGroup.Lights[i],
+                            Data = new ControlDevice.LEDData()
                             {
-                                LEDName = "Bulb " + allGroup.Lights[i],
-                                Data = new ControlDevice.LEDData()
-                                {
-                                    LEDNumber = int.Parse(allGroup.Lights[i])
-                                },
-                                Color = new LEDColor(0, 0, 0)
-                            };
-                        }
-
-                        Debug.WriteLine("adding device");
-
-                    controlDevices.Add(dev);
+                                LEDNumber = int.Parse(allGroup.Lights[i])
+                            },
+                            Color = new LEDColor(0, 0, 0)
+                        };
                     }
 
-                    Debug.WriteLine("All done");
+                    Debug.WriteLine("adding device");
 
+                    controlDevices.Add(dev);
+                }
 
-
-
-            isReady = true;
+                isReady = true;
                 isConnecting = false;
+                
+                if (fd != controlDevices.Count)
+                {
+                    config.DataIsDirty = true;
+                    FireDeviceRescanRequired();
+                }
+
+                Debug.WriteLine("All done");
+
+
+
+
+    
             }
         }
 
@@ -150,6 +154,18 @@ namespace Driver.PhillipsHue
 
         }
 
+        public event EventHandler DeviceRescanRequired;
+
+        public void FireDeviceRescanRequired()
+        {
+            OnFireDeviceRescanRequired(new EventArgs());
+        }
+
+        void OnFireDeviceRescanRequired(EventArgs e)
+        {
+            DeviceRescanRequired?.Invoke(this, e);
+        }
+
         public void Configure(DriverDetails driverDetails)
         {
             ServicePointManager.ServerCertificateValidationCallback +=
@@ -163,13 +179,20 @@ namespace Driver.PhillipsHue
 
         public List<ControlDevice> GetDevices()
         {
-            while (!isReady)
+            if (!string.IsNullOrWhiteSpace(config.UserName) && !string.IsNullOrWhiteSpace(config.Key) &&
+                !string.IsNullOrWhiteSpace(config.IPAddress))
             {
-                Thread.Sleep(1000);
-                Debug.WriteLine("Waiting...");
-                if (!isConnecting)
+                int ct = 0;
+                while (!isReady && ct < 10)
                 {
-                    Setup();
+                    Thread.Sleep(1000);
+                    Debug.WriteLine("Waiting...");
+                    if (!isConnecting)
+                    {
+                        Setup();
+                    }
+
+                    ct++;
                 }
             }
 
@@ -182,6 +205,7 @@ namespace Driver.PhillipsHue
             {
                 return;
             }
+
 
             isWriting = true;
             try
@@ -206,7 +230,7 @@ namespace Driver.PhillipsHue
                     ct++;
                 }
 
-                if (!pcd.HasConnected&&!isConnecting)
+                if (!pcd.HasConnected && !isConnecting)
                 {
                     isConnecting = true;
                     try
@@ -222,7 +246,7 @@ namespace Driver.PhillipsHue
                     }
                     isConnecting = false;
                 }
-                
+
                 StreamingClient.ManualUpdate(pcd.StreamingGroup, true);
             }
             catch
@@ -240,20 +264,27 @@ namespace Driver.PhillipsHue
 
         }
 
+        private DriverProperties driverProps;
         public DriverProperties GetProperties()
         {
-            return new DriverProperties
+            if (driverProps == null)
             {
-                Author = "Mad Ninja",
-                Blurb = "Simple Driver for HUE bulbs",
-                CurrentVersion = new ReleaseNumber(1, 0, 0, 1001),
-                GitHubLink = "https://github.com/SimpleLed/Driver.PhillipsHue",
-                Id = Guid.Parse("14e1f193-5e17-4e56-82ce-6a3f8f282020"),
-                IsPublicRelease = false,
-                IsSource = false,
-                SupportsPull = false,
-                SupportsPush = true
-            };
+
+                driverProps = new DriverProperties
+                {
+                    Author = "Mad Ninja",
+                    Blurb = "Simple Driver for HUE bulbs",
+                    CurrentVersion = new ReleaseNumber(1, 0, 0, 1002),
+                    GitHubLink = "https://github.com/SimpleLed/Driver.PhillipsHue",
+                    Id = Guid.Parse("14e1f193-5e17-4e56-82ce-6a3f8f282020"),
+                    IsPublicRelease = false,
+                    IsSource = false,
+                    SupportsPull = false,
+                    SupportsPush = true
+                };
+            }
+
+            return driverProps;
         }
 
         public T GetConfig<T>() where T : SLSConfigData
@@ -281,11 +312,12 @@ namespace Driver.PhillipsHue
 
         public UserControl GetCustomConfig(ControlDevice controlDevice)
         {
-            return new HueConfig();
+            return new HueConfig(this);
         }
 
         public bool GetIsDirty()
         {
+            if (config == null) return false;
             return config.DataIsDirty;
         }
 

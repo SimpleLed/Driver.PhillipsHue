@@ -20,9 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Q42.HueApi\Q42.HueApi.csproj">
-      <PrivateAssets>All</PrivateAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\Q42.HueApi\Q42.HueApi.csproj" />
   </ItemGroup>
 
 </Project>

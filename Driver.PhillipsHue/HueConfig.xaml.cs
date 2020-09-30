@@ -20,24 +20,31 @@ namespace Driver.PhillipsHue
     /// </summary>
     public partial class HueConfig : UserControl
     {
-        public HueConfig()
+        public PhillipsHue Instance = null;
+        public HueConfig(PhillipsHue instance)
         {
+            Instance = instance;
             InitializeComponent();
-            IPAddress.Text = PhillipsHue.Instance?.config?.IPAddress;
-            UserName.Text = PhillipsHue.Instance?.config?.UserName;
-            HueKey.Text = PhillipsHue.Instance?.config?.Key;
+            IPAddress.Text = Instance?.config?.IPAddress;
+            UserName.Text = Instance?.config?.UserName;
+            HueKey.Text = Instance?.config?.Key;
 
-            if (PhillipsHue.Instance?.controlDevices?.Count > 0)
+            if (Instance?.controlDevices?.Count > 0)
             {
-                DevicesFound.Content = PhillipsHue.Instance?.controlDevices?.Count + " devices found.";
+                DevicesFound.Content = Instance?.controlDevices?.Count + " devices found.";
             }
         }
 
         private async void RequestUserName(object sender, RoutedEventArgs e)
         {
-            PhillipsHue.Instance.config.IPAddress = IPAddress.Text;
-            PhillipsHue.Instance.config.UserName = "";
-            PhillipsHue.Instance.config.Key = "";
+            if (Instance?.config == null)
+            {
+                Instance.config=new PhillipsHueConfig();
+            }
+
+            Instance.config.IPAddress = IPAddress.Text;
+            Instance.config.UserName = "";
+            Instance.config.Key = "";
             int attempts = 0;
             bool success = false;
             bool toggleWarning=true;
@@ -46,7 +53,7 @@ namespace Driver.PhillipsHue
             {
                 try
                 {
-                    await PhillipsHue.Instance.Register();
+                    await Instance.Register();
                     success = true;
                 }
                 catch
@@ -70,19 +77,19 @@ namespace Driver.PhillipsHue
 
             LinkWarning.Visibility = Visibility.Collapsed;
 
-            IPAddress.Text = PhillipsHue.Instance?.config?.IPAddress;
-            UserName.Text = PhillipsHue.Instance?.config?.UserName;
-            HueKey.Text = PhillipsHue.Instance?.config?.Key;
+            IPAddress.Text = Instance?.config?.IPAddress;
+            UserName.Text = Instance?.config?.UserName;
+            HueKey.Text = Instance?.config?.Key;
 
-            PhillipsHue.Instance.Setup();
-            PhillipsHue.Instance.GetDevices(); 
+            Instance.Setup();
+            Instance.GetDevices(); 
 
-            if (PhillipsHue.Instance?.controlDevices?.Count > 0)
+            if (Instance?.controlDevices?.Count > 0)
             {
-                DevicesFound.Content = PhillipsHue.Instance?.controlDevices?.Count + " devices found.";
+                DevicesFound.Content = Instance?.controlDevices?.Count + " devices found.";
             }
 
-            PhillipsHue.Instance?.SetIsDirty(true);
+            Instance?.SetIsDirty(true);
         }
     }
 }
