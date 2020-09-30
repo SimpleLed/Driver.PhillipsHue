@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30323.103
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver.PhillipsHue", "Driver.PhillipsHue.csproj", "{6260B4D2-CAA5-4934-AD5F-F0A8A6622AC2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q42.HueApi", "Libs\Q42.HueApi\Q42.HueApi.csproj", "{A7E950A4-607C-4BE1-9F96-F0A9874E3749}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q42.HueApi.ColorConverters", "Libs\Q42.HueApi.ColorConverters\Q42.HueApi.ColorConverters.csproj", "{1C1AB52A-C13D-4F03-83F4-82FDE2633D3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q42.HueApi.Streaming", "Libs\Q42.Streaming\Q42.HueApi.Streaming.csproj", "{76BA30BD-DEC7-4C2D-8816-ED092B819352}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{6260B4D2-CAA5-4934-AD5F-F0A8A6622AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6260B4D2-CAA5-4934-AD5F-F0A8A6622AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6260B4D2-CAA5-4934-AD5F-F0A8A6622AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E950A4-607C-4BE1-9F96-F0A9874E3749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E950A4-607C-4BE1-9F96-F0A9874E3749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E950A4-607C-4BE1-9F96-F0A9874E3749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E950A4-607C-4BE1-9F96-F0A9874E3749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C1AB52A-C13D-4F03-83F4-82FDE2633D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C1AB52A-C13D-4F03-83F4-82FDE2633D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C1AB52A-C13D-4F03-83F4-82FDE2633D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C1AB52A-C13D-4F03-83F4-82FDE2633D3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76BA30BD-DEC7-4C2D-8816-ED092B819352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76BA30BD-DEC7-4C2D-8816-ED092B819352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76BA30BD-DEC7-4C2D-8816-ED092B819352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76BA30BD-DEC7-4C2D-8816-ED092B819352}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -39,10 +39,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Q42.HueApi.ColorConverters, Version=3.14.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Desktop\Q42.HueApi-master\src\Q42.HueApi.ColorConverters\bin\Debug\netstandard2.0\Q42.HueApi.ColorConverters.dll</HintPath>
-    </Reference>
     <Reference Include="SimpleLed, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\SimpleLed.1.0.8\lib\net472\SimpleLed.dll</HintPath>
     </Reference>
@@ -122,20 +118,24 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Libs\Q42.HueApi\Q42.HueApi.csproj">
-      <Project>{E6163E45-E19A-4B83-A31D-D1C4A8738F1F}</Project>
-      <Name>Q42.HueApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="Libs\Q42.Streaming\Q42.HueApi.Streaming.csproj">
-      <Project>{B8A2BC0A-CBC6-4E07-9349-38D4B5E1A05E}</Project>
-      <Name>Q42.HueApi.Streaming</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="HueConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Libs\Q42.HueApi.ColorConverters\Q42.HueApi.ColorConverters.csproj">
+      <Project>{1c1ab52a-c13d-4f03-83f4-82fde2633d3c}</Project>
+      <Name>Q42.HueApi.ColorConverters</Name>
+    </ProjectReference>
+    <ProjectReference Include="Libs\Q42.HueApi\Q42.HueApi.csproj">
+      <Project>{A7E950A4-607C-4BE1-9F96-F0A9874E3749}</Project>
+      <Name>Q42.HueApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="Libs\Q42.Streaming\Q42.HueApi.Streaming.csproj">
+      <Project>{76BA30BD-DEC7-4C2D-8816-ED092B819352}</Project>
+      <Name>Q42.HueApi.Streaming</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
