@@ -241,7 +241,7 @@ namespace Driver.PhillipsHue
                         Debug.WriteLine("Connected");
 
                     }
-                    catch
+                    catch(Exception e)
                     {
                     }
                     isConnecting = false;
@@ -274,7 +274,7 @@ namespace Driver.PhillipsHue
                 {
                     Author = "Mad Ninja",
                     Blurb = "Simple Driver for HUE bulbs",
-                    CurrentVersion = new ReleaseNumber(1, 0, 0, 1002),
+                    CurrentVersion = new ReleaseNumber(1, 0, 0, 1003),
                     GitHubLink = "https://github.com/SimpleLed/Driver.PhillipsHue",
                     Id = Guid.Parse("14e1f193-5e17-4e56-82ce-6a3f8f282020"),
                     IsPublicRelease = false,
