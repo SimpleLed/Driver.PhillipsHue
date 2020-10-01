@@ -236,6 +236,11 @@ namespace Driver.PhillipsHue
                     try
                     {
                         Debug.WriteLine("Connecting");
+                        if (StreamingClient == null)
+                        {
+                            StreamingClient = new StreamingHueClient(config.IPAddress, config.UserName, config.Key);
+                        }
+
                         StreamingClient.Connect(pcd.AllGroupId, false).Wait();
                         pcd.HasConnected = true;
                         Debug.WriteLine("Connected");
@@ -243,6 +248,7 @@ namespace Driver.PhillipsHue
                     }
                     catch(Exception e)
                     {
+                        Debug.WriteLine(e.Message);
                     }
                     isConnecting = false;
                 }
@@ -274,7 +280,7 @@ namespace Driver.PhillipsHue
                 {
                     Author = "Mad Ninja",
                     Blurb = "Simple Driver for HUE bulbs",
-                    CurrentVersion = new ReleaseNumber(1, 0, 0, 1003),
+                    CurrentVersion = new ReleaseNumber(1, 0, 0, 1004),
                     GitHubLink = "https://github.com/SimpleLed/Driver.PhillipsHue",
                     Id = Guid.Parse("14e1f193-5e17-4e56-82ce-6a3f8f282020"),
                     IsPublicRelease = false,
